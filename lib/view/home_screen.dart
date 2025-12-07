@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:news_app/models/news_channel_headlines_model.dart';
 import 'package:news_app/view_model/news_view_model.dart';
 
@@ -12,8 +13,22 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
+enum FilterList {
+  bbcNews,
+  aryNews,
+  independent,
+  reuters,
+  cnn,
+  foxNews,
+  time,
+  theWashingtonPost,
+  alJazeera,
+  geoNews,
+}
+
 class _HomeScreenState extends State<HomeScreen> {
   NewsViewModel newsViewModel = NewsViewModel();
+  final format = DateFormat("MMMM dd, yyyy");
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width * 1;
@@ -48,13 +63,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     scrollDirection: Axis.horizontal,
                     itemCount: snapshot.data!.articles!.length,
                     itemBuilder: (context, index) {
+                      DateTime dateTime = DateTime.parse(
+                        snapshot.data!.articles![index].publishedAt.toString(),
+                      );
                       return SizedBox(
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
                             Container(
-                              height: height* .6,
-                              width: width* .9,
+                              height: height * .6,
+                              width: width * .9,
                               padding: EdgeInsets.symmetric(
                                 horizontal: height * 0.02,
                               ),
@@ -67,11 +85,89 @@ class _HomeScreenState extends State<HomeScreen> {
                                       .urlToImage
                                       .toString(),
                                   fit: BoxFit.cover,
-                                  placeholder: (context,url)=> SpinKitFadingCircle(
-                                    color: Colors.amber,
-                                    size: 50,
+                                  placeholder: (context, url) =>
+                                      SpinKitFadingCircle(
+                                        color: Colors.amber,
+                                        size: 50,
+                                      ),
+                                  errorWidget: (context, url, error) => Icon(
+                                    Icons.warning,
+                                    color: Colors.redAccent,
                                   ),
-                                  errorWidget: (context,url,error)=>Icon(Icons.warning,color: Colors.redAccent,),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 20,
+                              child: Card(
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Container(
+                                  height: height * .22,
+                                  alignment: Alignment.bottomCenter,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          width: width * 0.7,
+                                          child: Text(
+                                            snapshot
+                                                .data!
+                                                .articles![index]
+                                                .title
+                                                .toString(),
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 17,
+                                              fontWeight: .w700,
+                                            ),
+                                            maxLines: 3,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        Spacer(),
+                                        Container(
+                                          width: width * 0.7,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                snapshot
+                                                    .data!
+                                                    .articles![index]
+                                                    .source!
+                                                    .name
+                                                    .toString(),
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 13,
+                                                  fontWeight: .w600,
+                                                  color: Colors.blue,
+                                                ),
+                                                maxLines: 3,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              Text(
+                                                format.format(dateTime),
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 12,
+                                                  fontWeight: .w500,
+                                                ),
+                                                maxLines: 3,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -88,5 +184,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
 }
