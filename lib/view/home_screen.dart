@@ -190,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     .toString(),
                                 content: snapshot.data!.articles![index].content
                                     .toString(),
-                                source: snapshot.data!.articles![index].source
+                                source: snapshot.data!.articles![index].source!.name
                                     .toString(),
                               ),
                             ),
@@ -338,95 +338,125 @@ class _HomeScreenState extends State<HomeScreen> {
                           dateTime = DateTime.parse(article.publishedAt!);
                         }
 
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 15),
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Row(
-                              children: [
-                                if (article.urlToImage != null)
-                                  ClipRRect(
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(15),
-                                      bottomLeft: Radius.circular(15),
+                        return InkWell(
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>NewsDetailScreen(newImage: snapshot
+                                .data!
+                                .articles![index]
+                                .urlToImage
+                                .toString(),
+                              newsTitles: snapshot
+                                  .data!
+                                  .articles![index]
+                                  .title
+                                  .toString(),
+                              newsDate: snapshot
+                                  .data!
+                                  .articles![index]
+                                  .publishedAt
+                                  .toString(),
+                              author: snapshot.data!.articles![index].author
+                                  .toString(),
+                              description: snapshot
+                                  .data!
+                                  .articles![index]
+                                  .description
+                                  .toString(),
+                              content: snapshot.data!.articles![index].content
+                                  .toString(),
+                              source: snapshot.data!.articles![index].source!.name
+                                  .toString(),)));
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 15),
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Row(
+                                children: [
+                                  if (article.urlToImage != null)
+                                    ClipRRect(
+                                      borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(15),
+                                        bottomLeft: Radius.circular(15),
+                                      ),
+                                      child: CachedNetworkImage(
+                                        imageUrl: article.urlToImage!,
+                                        fit: BoxFit.cover,
+                                        height: height * 0.15,
+                                        width: width * 0.3,
+                                        placeholder: (context, url) =>
+                                            const Center(
+                                              child: SpinKitFadingCircle(
+                                                color: Colors.amber,
+                                                size: 40,
+                                              ),
+                                            ),
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(
+                                              Icons.error_outline,
+                                              color: Colors.red,
+                                            ),
+                                      ),
                                     ),
-                                    child: CachedNetworkImage(
-                                      imageUrl: article.urlToImage!,
-                                      fit: BoxFit.cover,
+                                  Expanded(
+                                    child: Container(
                                       height: height * 0.15,
-                                      width: width * 0.3,
-                                      placeholder: (context, url) =>
-                                          const Center(
-                                            child: SpinKitFadingCircle(
-                                              color: Colors.amber,
-                                              size: 40,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          if (article.title != null)
+                                            Text(
+                                              article.title!,
+                                              maxLines: 3,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w700,
+                                              ),
                                             ),
-                                          ),
-                                      errorWidget: (context, url, error) =>
-                                          const Icon(
-                                            Icons.error_outline,
-                                            color: Colors.red,
-                                          ),
-                                    ),
-                                  ),
-                                Expanded(
-                                  child: Container(
-                                    height: height * 0.15,
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        if (article.title != null)
-                                          Text(
-                                            article.title!,
-                                            maxLines: 3,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: GoogleFonts.poppins(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-                                        const Spacer(),
-                                        if (dateTime != null)
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Expanded(
-                                                child: Text(
-                                                  (article.source?.name ??
-                                                          "Unknown")
-                                                      .replaceAll('.com', ''),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: GoogleFonts.poppins(
-                                                    fontSize: 10,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.blue,
+                                          const Spacer(),
+                                          if (dateTime != null)
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                  child: Text(
+                                                    (article.source?.name ??
+                                                            "Unknown")
+                                                        .replaceAll('.com', ''),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: GoogleFonts.poppins(
+                                                      fontSize: 10,
+                                                      fontWeight: FontWeight.w600,
+                                                      color: Colors.blue,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              Text(
-                                                format.format(dateTime),
-                                                style: GoogleFonts.poppins(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w500,
+                                                Text(
+                                                  format.format(dateTime),
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                      ],
+                                              ],
+                                            ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         );

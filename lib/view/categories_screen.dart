@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:news_app/models/categories_news_model.dart';
 
 import '../view_model/news_view_model.dart';
+import 'news_detail_screen.dart';
 
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({super.key});
@@ -100,74 +101,104 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                           dateTime = DateTime.parse(article.publishedAt!);
                         }
 
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 15),
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Column(
-                              children: [
-                                if (article.urlToImage != null)
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(15),
-                                        topRight: Radius.circular(15)),
-                                    child: CachedNetworkImage(
-                                      imageUrl: article.urlToImage!,
-                                      fit: BoxFit.cover,
-                                      height: height * .18,
-                                      width: width * .9,
-                                      placeholder: (context, url) => Center(
-                                          child: SpinKitFadingCircle(
-                                        color: Colors.amber,
-                                        size: 50,
-                                      )),
-                                      errorWidget: (context, url, error) =>
-                                          Icon(Icons.error_outline,
-                                              color: Colors.red),
+                        return InkWell(
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>NewsDetailScreen(newImage: snapshot
+                                .data!
+                                .articles![index]
+                                .urlToImage
+                                .toString(),
+                              newsTitles: snapshot
+                                  .data!
+                                  .articles![index]
+                                  .title
+                                  .toString(),
+                              newsDate: snapshot
+                                  .data!
+                                  .articles![index]
+                                  .publishedAt
+                                  .toString(),
+                              author: snapshot.data!.articles![index].author
+                                  .toString(),
+                              description: snapshot
+                                  .data!
+                                  .articles![index]
+                                  .description
+                                  .toString(),
+                              content: snapshot.data!.articles![index].content
+                                  .toString(),
+                              source: snapshot.data!.articles![index].source!.name
+                                  .toString(),)));
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 15),
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Column(
+                                children: [
+                                  if (article.urlToImage != null)
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(15),
+                                          topRight: Radius.circular(15)),
+                                      child: CachedNetworkImage(
+                                        imageUrl: article.urlToImage!,
+                                        fit: BoxFit.cover,
+                                        height: height * .18,
+                                        width: width * .9,
+                                        placeholder: (context, url) => Center(
+                                            child: SpinKitFadingCircle(
+                                          color: Colors.amber,
+                                          size: 50,
+                                        )),
+                                        errorWidget: (context, url, error) =>
+                                            Icon(Icons.error_outline,
+                                                color: Colors.red),
+                                      ),
                                     ),
-                                  ),
-                                Container(
-                                  padding: EdgeInsets.all(15),
-                                  child: Column(
-                                    children: [
-                                      if (article.title != null)
-                                        Text(
-                                          article.title!,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 17,
-                                              fontWeight: FontWeight.w700),
-                                        ),
-                                      SizedBox(height: 15),
-                                      if (dateTime != null)
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              article.source?.name ??
-                                                  "Unknown",
-                                              style: GoogleFonts.poppins(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.blue),
-                                            ),
-                                            Text(
-                                              format.format(dateTime),
-                                              style: GoogleFonts.poppins(
-                                                  fontSize: 12,
-                                                  fontWeight:
-                                                      FontWeight.w500),
-                                            ),
-                                          ],
-                                        ),
-                                    ],
-                                  ),
-                                )
-                              ],
+                                  Container(
+                                    padding: EdgeInsets.all(15),
+                                    child: Column(
+                                      children: [
+                                        if (article.title != null)
+                                          Text(
+                                            article.title!,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                        SizedBox(height: 15),
+                                        if (dateTime != null)
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                article.source?.name ??
+                                                    "Unknown",
+                                                style: GoogleFonts.poppins(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.blue),
+                                              ),
+                                              Text(
+                                                format.format(dateTime),
+                                                style: GoogleFonts.poppins(
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ],
+                                          ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         );
