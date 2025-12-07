@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:news_app/models/news_channel_headlines_model.dart';
+import 'package:news_app/view/categories_screen.dart';
 import 'package:news_app/view_model/news_view_model.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -40,7 +41,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>CategoriesScreen()));
+          },
           icon: Image.asset("assets/images/category_icon.png"),
         ),
         title: Text(
