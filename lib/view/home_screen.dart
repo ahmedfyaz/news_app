@@ -50,7 +50,42 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
         actions: [
           PopupMenuButton(
-          initialValue: selectedMenu
+          initialValue: selectedMenu,
+          icon: Icon(Icons.more_vert,color: Colors.black),
+          onSelected: (FilterList item){
+            if(FilterList.bbcNews.name == item.name)
+              {
+                name = "bbc-news";
+              }
+            if(FilterList.aryNews.name == item.name)
+              {
+                name = "ary-news";
+              }
+            if(FilterList.theWashingtonPost.name == item.name)
+              {
+                name = "the-washington-post";
+              }
+            if(FilterList.reuters.name == item.name)
+              {
+                name = "reuters";
+              }
+            if(FilterList.independent.name == item.name)
+              {
+                name = "independent";
+              }
+            if(FilterList.cnn.name == item.name)
+              {
+                name = "cnn";
+              }
+            if(FilterList.foxNews.name == item.name)
+              {
+                name = "fox-news";
+              }
+            if(FilterList.time.name == item.name)
+              {
+                name = "time";
+              }
+          }
           ,itemBuilder: (context)=><PopupMenuEntry<FilterList>>[
             PopupMenuItem<FilterList>(
               value: FilterList.bbcNews,
