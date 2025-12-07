@@ -85,6 +85,13 @@ class _HomeScreenState extends State<HomeScreen> {
               {
                 name = "time";
               }
+            if(FilterList.alJazeera.name == item.name)
+              {
+                name = "al-jazeera-english";
+              }
+            setState(() {
+
+            });
           }
           ,itemBuilder: (context)=><PopupMenuEntry<FilterList>>[
             PopupMenuItem<FilterList>(
@@ -102,9 +109,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),PopupMenuItem<FilterList>(
               value: FilterList.foxNews,
               child: Text("Fox News"),
-            ),PopupMenuItem<FilterList>(
-              value: FilterList.geoNews,
-              child: Text("Geo News"),
             ),PopupMenuItem<FilterList>(
               value: FilterList.independent,
               child: Text("Independent"),
@@ -127,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
             height: height * .55,
             width: width,
             child: FutureBuilder<NewsChannelHeadlinesModel>(
-              future: newsViewModel.fetchNewChannelHeadlinesApi(),
+              future: newsViewModel.fetchNewChannelHeadlinesApi(name),
               builder: (BuildContext context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return SpinKitFadingCircle(
