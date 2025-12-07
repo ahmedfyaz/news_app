@@ -4,7 +4,7 @@ import "package:http/http.dart" as http;
 import "package:news_app/models/categories_news_model.dart";
 import "package:news_app/models/news_channel_headlines_model.dart";
 
-String API_KEY = "568de588371843c09f4f66260cb4cab6";
+String API_KEY = "";  // Add your api key here get it from https://newsapi.org
 
 class NewsRepository {
   Future<NewsChannelHeadlinesModel>fetchNewChannelHeadlinesApi(String channelName)async{
