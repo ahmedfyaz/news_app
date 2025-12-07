@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:news_app/models/categories_news_model.dart';
 import 'package:news_app/models/news_channel_headlines_model.dart';
 import 'package:news_app/view/categories_screen.dart';
 import 'package:news_app/view_model/news_view_model.dart';
@@ -129,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ])
         ],
       ),
-      body: ListView(
+      body: Column(
         children: [
           SizedBox(
             height: height * .55,
@@ -270,6 +271,125 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 }
               },
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FutureBuilder<CategoriesNewsModel>(
+                future: newsViewModel.fetchCategoriesNewsApi("General"),
+                builder: (BuildContext context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: SpinKitFadingCircle(
+                        size: 50,
+                        color: Color(0xFFF6794D),
+                      ),
+                    );
+                  } else if (snapshot.hasData &&
+                      snapshot.data!.articles != null &&
+                      snapshot.data!.articles!.isNotEmpty) {
+                    return ListView.builder(
+                      itemCount: snapshot.data!.articles!.length,
+                      itemBuilder: (context, index) {
+                        var article = snapshot.data!.articles![index];
+                        DateTime? dateTime;
+                        if (article.publishedAt != null) {
+                          dateTime = DateTime.parse(article.publishedAt!);
+                        }
+
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 15),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Row(
+                              children: [
+                                if (article.urlToImage != null)
+                                  ClipRRect(
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(15),
+                                      bottomLeft: Radius.circular(15),
+                                    ),
+                                    child: CachedNetworkImage(
+                                      imageUrl: article.urlToImage!,
+                                      fit: BoxFit.cover,
+                                      height: height * 0.15,
+                                      width: width * 0.3,
+                                      placeholder: (context, url) =>
+                                          const Center(
+                                        child: SpinKitFadingCircle(
+                                          color: Colors.amber,
+                                          size: 40,
+                                        ),
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error_outline,
+                                              color: Colors.red),
+                                    ),
+                                  ),
+                                Expanded(
+                                  child: Container(
+                                    height: height * 0.15,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        if (article.title != null)
+                                          Text(
+                                            article.title!,
+                                            maxLines: 3,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                        const Spacer(),
+                                        if (dateTime != null)
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                article.source?.name ??
+                                                    "Unknown",
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.blue,
+                                                ),
+                                              ),
+                                              Text(
+                                                format.format(dateTime),
+                                                style: GoogleFonts.poppins(
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ],
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    return const Center(
+                      child: Text("No news articles found."),
+                    );
+                  }
+                },
+              ),
             ),
           ),
         ],
