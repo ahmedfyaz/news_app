@@ -25,9 +25,13 @@ enum FilterList {
   alJazeera,
   geoNews,
 }
+String name = "bbc-news";
 
 class _HomeScreenState extends State<HomeScreen> {
   NewsViewModel newsViewModel = NewsViewModel();
+
+  FilterList? selectedMenu;
+
   final format = DateFormat("MMMM dd, yyyy");
   @override
   Widget build(BuildContext context) {
@@ -44,6 +48,43 @@ class _HomeScreenState extends State<HomeScreen> {
           style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.w700),
         ),
         centerTitle: true,
+        actions: [
+          PopupMenuButton(
+          initialValue: selectedMenu
+          ,itemBuilder: (context)=><PopupMenuEntry<FilterList>>[
+            PopupMenuItem<FilterList>(
+              value: FilterList.bbcNews,
+              child: Text("BBC News"),
+            ),PopupMenuItem<FilterList>(
+              value: FilterList.alJazeera,
+              child: Text("Al Jazeera"),
+            ),PopupMenuItem<FilterList>(
+              value: FilterList.aryNews,
+              child: Text("Ary News"),
+            ),PopupMenuItem<FilterList>(
+              value: FilterList.cnn,
+              child: Text("CNN"),
+            ),PopupMenuItem<FilterList>(
+              value: FilterList.foxNews,
+              child: Text("Fox News"),
+            ),PopupMenuItem<FilterList>(
+              value: FilterList.geoNews,
+              child: Text("Geo News"),
+            ),PopupMenuItem<FilterList>(
+              value: FilterList.independent,
+              child: Text("Independent"),
+            ),PopupMenuItem<FilterList>(
+              value: FilterList.reuters,
+              child: Text("Reuters"),
+            ),PopupMenuItem<FilterList>(
+              value: FilterList.theWashingtonPost,
+              child: Text("The Washington Post"),
+            ),PopupMenuItem<FilterList>(
+              value: FilterList.time,
+              child: Text("Time"),
+            ),
+          ])
+        ],
       ),
       body: ListView(
         children: [
