@@ -26,7 +26,6 @@ enum FilterList {
   alJazeera,
   geoNews,
 }
-String name = "bbc-news";
 
 class _HomeScreenState extends State<HomeScreen> {
   NewsViewModel newsViewModel = NewsViewModel();
@@ -34,6 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
   FilterList? selectedMenu;
 
   final format = DateFormat("MMMM dd, yyyy");
+  String name = "bbc-news";
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width * 1;
@@ -42,7 +43,10 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>CategoriesScreen()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const CategoriesScreen()));
           },
           icon: Image.asset("assets/images/category_icon.png"),
         ),
@@ -52,80 +56,77 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         centerTitle: true,
         actions: [
-          PopupMenuButton(
-          initialValue: selectedMenu,
-          icon: Icon(Icons.more_vert,color: Colors.black),
-          onSelected: (FilterList item){
-            if(FilterList.bbcNews.name == item.name)
-              {
-                name = "bbc-news";
-              }
-            if(FilterList.aryNews.name == item.name)
-              {
-                name = "ary-news";
-              }
-            if(FilterList.theWashingtonPost.name == item.name)
-              {
-                name = "the-washington-post";
-              }
-            if(FilterList.reuters.name == item.name)
-              {
-                name = "reuters";
-              }
-            if(FilterList.independent.name == item.name)
-              {
-                name = "independent";
-              }
-            if(FilterList.cnn.name == item.name)
-              {
-                name = "cnn";
-              }
-            if(FilterList.foxNews.name == item.name)
-              {
-                name = "fox-news";
-              }
-            if(FilterList.time.name == item.name)
-              {
-                name = "time";
-              }
-            if(FilterList.alJazeera.name == item.name)
-              {
-                name = "al-jazeera-english";
-              }
-            setState(() {
-
-            });
-          }
-          ,itemBuilder: (context)=><PopupMenuEntry<FilterList>>[
-            PopupMenuItem<FilterList>(
-              value: FilterList.bbcNews,
-              child: Text("BBC News"),
-            ),PopupMenuItem<FilterList>(
-              value: FilterList.alJazeera,
-              child: Text("Al Jazeera"),
-            ),PopupMenuItem<FilterList>(
-              value: FilterList.aryNews,
-              child: Text("Ary News"),
-            ),PopupMenuItem<FilterList>(
-              value: FilterList.cnn,
-              child: Text("CNN"),
-            ),PopupMenuItem<FilterList>(
-              value: FilterList.foxNews,
-              child: Text("Fox News"),
-            ),PopupMenuItem<FilterList>(
-              value: FilterList.independent,
-              child: Text("Independent"),
-            ),PopupMenuItem<FilterList>(
-              value: FilterList.reuters,
-              child: Text("Reuters"),
-            ),PopupMenuItem<FilterList>(
-              value: FilterList.theWashingtonPost,
-              child: Text("The Washington Post"),
-            ),PopupMenuItem<FilterList>(
-              value: FilterList.time,
-              child: Text("Time"),
-            ),
-          ])
+          PopupMenuButton<FilterList>(
+              initialValue: selectedMenu,
+              icon: const Icon(Icons.more_vert, color: Colors.black),
+              onSelected: (FilterList item) {
+                if (FilterList.bbcNews.name == item.name) {
+                  name = "bbc-news";
+                }
+                if (FilterList.aryNews.name == item.name) {
+                  name = "ary-news";
+                }
+                if (FilterList.theWashingtonPost.name == item.name) {
+                  name = "the-washington-post";
+                }
+                if (FilterList.reuters.name == item.name) {
+                  name = "reuters";
+                }
+                if (FilterList.independent.name == item.name) {
+                  name = "independent";
+                }
+                if (FilterList.cnn.name == item.name) {
+                  name = "cnn";
+                }
+                if (FilterList.foxNews.name == item.name) {
+                  name = "fox-news";
+                }
+                if (FilterList.time.name == item.name) {
+                  name = "time";
+                }
+                if (FilterList.alJazeera.name == item.name) {
+                  name = "al-jazeera-english";
+                }
+                setState(() {});
+              },
+              itemBuilder: (context) => <PopupMenuEntry<FilterList>>[
+                    const PopupMenuItem<FilterList>(
+                      value: FilterList.bbcNews,
+                      child: Text("BBC News"),
+                    ),
+                    const PopupMenuItem<FilterList>(
+                      value: FilterList.alJazeera,
+                      child: Text("Al Jazeera"),
+                    ),
+                    const PopupMenuItem<FilterList>(
+                      value: FilterList.aryNews,
+                      child: Text("Ary News"),
+                    ),
+                    const PopupMenuItem<FilterList>(
+                      value: FilterList.cnn,
+                      child: Text("CNN"),
+                    ),
+                    const PopupMenuItem<FilterList>(
+                      value: FilterList.foxNews,
+                      child: Text("Fox News"),
+                    ),
+                    const PopupMenuItem<FilterList>(
+                      value: FilterList.independent,
+                      child: Text("Independent"),
+                    ),
+                    const PopupMenuItem<FilterList>(
+                      value: FilterList.reuters,
+                      child: Text("Reuters"),
+                    ),
+                    const PopupMenuItem<FilterList>(
+                      value: FilterList.theWashingtonPost,
+                      child: Text("The Washington Post"),
+                    ),
+                    const PopupMenuItem<FilterList>(
+                      value: FilterList.time,
+                      child: Text("Time"),
+                    ),
+                  ])
         ],
       ),
       body: ListView(
@@ -137,49 +138,54 @@ class _HomeScreenState extends State<HomeScreen> {
               future: newsViewModel.fetchNewChannelHeadlinesApi(name),
               builder: (BuildContext context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return SpinKitFadingCircle(
-                    size: 50,
-                    color: Color(0xFFF6794D),
+                  return const Center(
+                    child: SpinKitFadingCircle(
+                      size: 50,
+                      color: Color(0xFFF6794D),
+                    ),
                   );
-                } else {
+                } else if (snapshot.hasData &&
+                    snapshot.data!.articles != null &&
+                    snapshot.data!.articles!.isNotEmpty) {
                   return ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: snapshot.data!.articles!.length,
                     itemBuilder: (context, index) {
-                      DateTime dateTime = DateTime.parse(
-                        snapshot.data!.articles![index].publishedAt.toString(),
-                      );
+                      var article = snapshot.data!.articles![index];
+                      DateTime? dateTime;
+                      if (article.publishedAt != null) {
+                        dateTime = DateTime.parse(article.publishedAt!);
+                      }
+
                       return SizedBox(
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
-                            Container(
-                              height: height * .6,
-                              width: width * .9,
-                              padding: EdgeInsets.symmetric(
-                                horizontal: height * 0.02,
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(16),
-                                child: CachedNetworkImage(
-                                  imageUrl: snapshot
-                                      .data!
-                                      .articles![index]
-                                      .urlToImage
-                                      .toString(),
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) =>
-                                      SpinKitFadingCircle(
-                                        color: Colors.amber,
-                                        size: 50,
-                                      ),
-                                  errorWidget: (context, url, error) => Icon(
-                                    Icons.warning,
-                                    color: Colors.redAccent,
+                            if (article.urlToImage != null)
+                              Container(
+                                height: height * .6,
+                                width: width * .9,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: height * 0.02,
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: CachedNetworkImage(
+                                    imageUrl: article.urlToImage!,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) =>
+                                        const SpinKitFadingCircle(
+                                      color: Colors.amber,
+                                      size: 50,
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(
+                                      Icons.warning,
+                                      color: Colors.redAccent,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
                             Positioned(
                               bottom: 20,
                               child: Card(
@@ -198,56 +204,55 @@ class _HomeScreenState extends State<HomeScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
-                                        Container(
-                                          width: width * 0.7,
-                                          child: Text(
-                                            snapshot
-                                                .data!
-                                                .articles![index]
-                                                .title
-                                                .toString(),
-                                            style: GoogleFonts.poppins(
-                                              fontSize: 17,
-                                              fontWeight: .w700,
+                                        if (article.title != null)
+                                          Container(
+                                            width: width * 0.7,
+                                            child: Text(
+                                              article.title!,
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                              maxLines: 3,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
-                                            maxLines: 3,
-                                            overflow: TextOverflow.ellipsis,
                                           ),
-                                        ),
-                                        Spacer(),
-                                        Container(
-                                          width: width * 0.7,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                snapshot
-                                                    .data!
-                                                    .articles![index]
-                                                    .source!
-                                                    .name
-                                                    .toString(),
-                                                style: GoogleFonts.poppins(
-                                                  fontSize: 13,
-                                                  fontWeight: .w600,
-                                                  color: Colors.blue,
+                                        const Spacer(),
+                                        if (dateTime != null)
+                                          Container(
+                                            width: width * 0.7,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  article.source?.name ??
+                                                      'Unknown',
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 13,
+                                                    fontWeight:
+                                                        FontWeight.w600,
+                                                    color: Colors.blue,
+                                                  ),
+                                                  maxLines: 3,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
-                                                maxLines: 3,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                              Text(
-                                                format.format(dateTime),
-                                                style: GoogleFonts.poppins(
-                                                  fontSize: 12,
-                                                  fontWeight: .w500,
+                                                Text(
+                                                  format.format(dateTime),
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.w500,
+                                                  ),
+                                                  maxLines: 3,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
-                                                maxLines: 3,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
-                                        ),
                                       ],
                                     ),
                                   ),
@@ -258,6 +263,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       );
                     },
+                  );
+                } else {
+                  return const Center(
+                    child: Text("No news articles found."),
                   );
                 }
               },
